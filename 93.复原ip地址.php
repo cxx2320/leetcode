@@ -19,7 +19,8 @@ class Solution
     function restoreIpAddresses($s)
     {
         $this->s_length = strlen($s);
-        if ($this->s_length < 4) {
+        // IP的长度  4 <= ip <= 12
+        if ($this->s_length < 4  || $this->s_length > 12) {
             return [];
         }
         $this->find($s, 0, '', 0);
