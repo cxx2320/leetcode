@@ -18,7 +18,10 @@ class Solution
      */
     function combine($n, $k)
     {
-        if ($n < 1 || $k > $n || $k < 1) {
+        if ($n < 1) {
+            return [];
+        }
+        if ($k > $n) {
             return [];
         }
         $arr = [];
