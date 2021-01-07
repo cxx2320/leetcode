@@ -21,6 +21,49 @@ class Solution
 {
 
     /**
+     * 递归实现
+     * @param ListNode $head
+     * @param Integer $n
+     * @return ListNode
+     */
+    function removeNthFromEnd($head, $n)
+    {
+        // 使用dummy利于操作
+        $dummy = new ListNode(0);
+        $dummy->next = $head;
+        $this->delNextNode($dummy, $n + 1);
+        return $dummy->next;
+    }
+
+    /**
+     * 删除下一个节点   
+     *
+     * @param ListNode $node
+     * @param int $last_rank
+     * @return int
+     */
+    function delNextNode($node, $last_rank)
+    {
+        if ($node === null) {
+            return 1;
+        }
+        /** @var int $rank 当前节点是倒是第几个节点 */
+        $rank = $this->delNextNode($node->next, $last_rank);
+        if ($rank === $last_rank) {
+            $node->next = $node->next->next ?? null;
+        }
+        return $rank + 1;
+    }
+}
+// @lc code=end
+
+/**
+ * 迭代实现
+ */
+class Solution1
+{
+
+    /**
      * @param ListNode $head
      * @param Integer $n
      * @return ListNode
@@ -43,11 +86,10 @@ class Solution
             }
             $head = $head->next;
         }
-        if($length === $n){ // 这里如果相等就等于删除第一个节点
+        if ($length === $n) { // 这里如果相等就等于删除第一个节点
             return $dummy->next->next;
         }
         $slow->next = $slow->next->next ?? null;
         return $dummy->next;
     }
 }
-// @lc code=end
