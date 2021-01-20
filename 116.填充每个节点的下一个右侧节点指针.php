@@ -21,6 +21,45 @@
 class Solution
 {
     /**
+     * 迭代解法
+     * @param Node $root
+     * @return Node
+     */
+    public function connect($root)
+    {
+        if ($root === null) {
+            return null;
+        }
+        $queue = new SplQueue();
+        $queue->enqueue($root);
+        while (!$queue->isEmpty()) {
+            $pre = null;
+            $size = $queue->count();
+            while ($size--) {
+                $current_node = $queue->dequeue();
+                if ($current_node->left !== null) {
+                    $queue->enqueue($current_node->left);
+                }
+                if ($current_node->right !== null) {
+                    $queue->enqueue($current_node->right);
+                }
+                if ($pre !== null) {
+                    $pre->next = $current_node;
+                }
+                $pre = $current_node;
+            }
+        }
+        return $root;
+    }
+}
+// @lc code=end
+
+/**
+ * 递归解法
+ */
+class Solution1
+{
+    /**
      * @param Node $root
      * @return Node
      */
@@ -44,4 +83,3 @@ class Solution
         $this->two($node1->right, $node2->left);
     }
 }
-// @lc code=end
