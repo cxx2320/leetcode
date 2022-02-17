@@ -37,7 +37,49 @@
 
 class Solution
 {
+    /**
+     * @param String $s
+     * @return NestedInteger
+     */
+    function deserialize($s)
+    {
+        $stack = new SplStack();
+        if ($s[0] !== '[') {
+            return new NestedInteger($s);
+        }
+        [$num, $f] = ['', false];
+        for ($i = 0; $i < strlen($s); $i++) {
+            if ($s[$i] === '[') {
+                $stack->push(new NestedInteger());
+            } elseif ($s[$i] === ']') {
+                $ni = $stack->pop();
+                if ($num !== '') {
+                    $ni->add(new NestedInteger($f ? (0 - $num) : $num));
+                    [$num, $f] = ['', false];
+                }
+                if ($stack->count() === 0) {
+                    return $ni;
+                }
+                $stack->top()->add($ni);
+            } elseif ($s[$i] === ',') {
+                if ($num !== '') {
+                    $ni = new NestedInteger($f ? (0 - $num) : $num);
+                    $stack->top()->add($ni);
+                    [$num, $f] = ['', false];
+                }
+            } elseif ($s[$i] === '-') {
+                $f = true;
+            } else {
+                $num .= $s[$i];
+            }
+        }
+    }
+}
+// @lc code=end
 
+
+class Solution111
+{
     /**
      * @param String $s
      * @return NestedInteger
@@ -99,56 +141,6 @@ class Solution
             return $this->dfs($queue, $NestedInteger);
         }
         return new NestedInteger($str);
-    }
-}
-// @lc code=end
-
-
-class Solution111
-{
-
-    /**
-     * @param String $s
-     * @return NestedInteger
-     */
-    function deserialize($s)
-    {
-        $ni = new NestedInteger();
-        $this->dfs($s, 0, '', true, $ni);
-        var_dump($ni);
-    }
-
-    public function dfs($s, $index, $num, $z, $NestedInteger)
-    {
-        if (strlen($s) <= $index) {
-            if ($num !== '') {
-                $NestedInteger->setInteger($z ? $num : ($num - $num - $num));
-            }
-            return $NestedInteger;
-        }
-        if ($s[$index] === '[') {
-            $ni = new NestedInteger();
-            $NestedInteger->add($ni);
-            $this->dfs($s, $index + 1, '', true, $ni);
-            return $NestedInteger;
-        }
-
-        if ($s[$index] === ']') {
-            $ni = new NestedInteger($z ? $num : ($num - $num - $num));
-            $NestedInteger->add($ni);
-            return $this->dfs($s, $index + 1, '', true, new NestedInteger());
-        }
-
-        if ($s[$index] === '-') {
-            return $this->dfs($s, $index + 1, '', false, $NestedInteger);
-        }
-
-        if ($s[$index] === ',') {
-            $ni = new NestedInteger($z ? $num : ($num - $num - $num));
-            $NestedInteger->add($ni);
-            return $this->dfs($s, $index + 1, '', true, $NestedInteger);
-        }
-        return $this->dfs($s, $index + 1, $num . $s[$index], $z, $NestedInteger);
     }
 }
 
